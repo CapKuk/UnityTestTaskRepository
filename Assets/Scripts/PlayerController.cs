@@ -21,17 +21,13 @@ public class PlayerController : MonoBehaviour
     private float speed = 1;
     private Animator animator;
 
-    // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //checkPlauerPosition();
-
         bool isRunning = false;
 
         for (int i = 0; i < 4; i++)
@@ -43,16 +39,16 @@ public class PlayerController : MonoBehaviour
                 switch (name)
                 {
                     case "UP":
-                        transform.position = new Vector2(transform.position.x, transform.position.y + speed);
+                        transform.position = new Vector3(transform.position.x, transform.position.y + speed, -1);
                         break;
                     case "LEFT":
-                        transform.position = new Vector2(transform.position.x - speed, transform.position.y);
+                        transform.position = new Vector3(transform.position.x - speed, transform.position.y, -1);
                         break;
                     case "DOWN":
-                        transform.position = new Vector2(transform.position.x, transform.position.y - speed);
+                        transform.position = new Vector3(transform.position.x, transform.position.y - speed, -1);
                         break;
                     case "RIGHT":
-                        transform.position = new Vector2(transform.position.x + speed, transform.position.y);
+                        transform.position = new Vector3(transform.position.x + speed, transform.position.y, -1);
                         break;
                 }
             }
@@ -65,6 +61,29 @@ public class PlayerController : MonoBehaviour
         else
         {
             animator.SetBool("isRunning", false);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        switch (collision.gameObject.name)
+        {
+            case "LeftWall":
+                transform.position = new Vector3(transform.position.x + 10, transform.position.y, -1);
+                durations[(int)Enum.Parse(typeof(durationNumber), "LEFT")] = false;
+                break;
+            case "RightWall":
+                transform.position = new Vector3(transform.position.x - 10, transform.position.y, -1);
+                durations[(int)Enum.Parse(typeof(durationNumber), "RIGHT")] = false;
+                break;
+            case "UpWall":
+                transform.position = new Vector3(transform.position.x, transform.position.y - 10, -1);
+                durations[(int)Enum.Parse(typeof(durationNumber), "UP")] = false;
+                break;
+            case "DownWall":
+                transform.position = new Vector3(transform.position.x, transform.position.y + 10, -1);
+                durations[(int)Enum.Parse(typeof(durationNumber), "DOWN")] = false;
+                break;
         }
     }
 
@@ -107,30 +126,6 @@ public class PlayerController : MonoBehaviour
 
     private void dropTheBomb()
     {
-        Instantiate(bomb, transform.position, Quaternion.identity);
+        Instantiate(bomb, new Vector3(transform.position.x, transform.position.y, transform.position.z - 10), Quaternion.identity);
     }
-
-    private void checkPlauerPosition()
-    {
-        var pos = Camera.main.WorldToScreenPoint(transform.position);
-
-        if (transform.transform.position.x > 100)
-        {
-            transform.transform.position = new Vector2(100, transform.transform.position.y);
-            Debug.Log(transform.position + " " + transform.transform.position + " " + pos);
-        }
-        if (transform.transform.position.x < -100)
-        {
-            transform.transform.position = new Vector2(-100, transform.transform.position.y);
-        }
-        if (transform.transform.position.y > 213)
-        {
-            transform.transform.position = new Vector2(transform.transform.position.x, 213);
-        }
-        if (transform.transform.position.y < -213)
-        {
-            transform.transform.position = new Vector2(transform.transform.position.x, -213);
-        }
-    }
-
 }
