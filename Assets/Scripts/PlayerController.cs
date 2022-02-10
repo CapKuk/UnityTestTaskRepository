@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -22,7 +23,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                getIndestructeble();
+                getIndestructible();
             }
         }
         }
@@ -35,6 +36,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private float speed = 1;
+    private bool isIndestructible = false;
     private Animator animator;
 
     void Start()
@@ -111,7 +113,18 @@ public class PlayerController : MonoBehaviour
                 durations[(int)Enum.Parse(typeof(durationNumber), "DOWN")] = false;
                 break;
             case "Explosion(Clone)":
-                life--;
+                if (!isIndestructible)
+                {
+                    life--;
+                    getIndestructible();
+                }
+                break;
+            case "Enemy":
+                if (!isIndestructible)
+                {
+                    life--;
+                    getIndestructible();
+                }
                 break;
         }
     }
@@ -120,9 +133,18 @@ public class PlayerController : MonoBehaviour
     {
         model.playerDied(gameObject);
     }
-    private void getIndestructeble()
+    private void getIndestructible()
     {
+        StartCoroutine(corutine());
+    }
 
+    private IEnumerator corutine()
+    {
+        animator.SetBool("isHit", true);
+        isIndestructible = true;
+        yield return new WaitForSeconds(2f);
+        isIndestructible = false;
+        animator.SetBool("isHit", false);
     }
 
     private void startMoving(string duration)

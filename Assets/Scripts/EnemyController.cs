@@ -36,7 +36,7 @@ public class EnemyController : MonoBehaviour
         vectorSpeed.x = vectorSpeed.x + Random.Range(-speed, speed);
         vectorSpeed.y = vectorSpeed.y + Random.Range(-speed, speed);
 
-        transform.position = transform.position + new Vector3(vectorSpeed.x, vectorSpeed.y, 0);
+        transform.position = new Vector3(transform.position.x + vectorSpeed.x, transform.position.y + vectorSpeed.y, -1);
     }
 
     private void OnCollisionEnter(Collision collision)
