@@ -59,6 +59,7 @@
     <Compile Include="Assets\Scripts\Game_Model.cs" />
     <Compile Include="Assets\Scripts\EnemyController.cs" />
     <Compile Include="Assets\Scripts\ButtonClick.cs" />
+    <Compile Include="Assets\Scripts\startGameController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

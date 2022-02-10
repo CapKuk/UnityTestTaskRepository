@@ -6,6 +6,7 @@ public class Game_Model : MonoBehaviour
     public Text lifeCounterTextField;
     public GameObject enemyPrefub;
     public GameObject restartButton;
+    public GameObject canvas;
     public GameObject stonePrefab;
 
     private int enemyLeft = 10;
@@ -43,20 +44,47 @@ public class Game_Model : MonoBehaviour
         }
     }
 
+    private Vector2 size = new Vector2();
+    private void setSize()
+    {
+        var h = canvas.GetComponent<RectTransform>().rect.height;
+        var w = canvas.GetComponent<RectTransform>().rect.width;
+
+        size.x = w;
+        size.y = h;
+    }
+
     private void Start()
     {
+        setSize();
+
+        GameObject stone = Instantiate(stonePrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        stone.transform.SetParent(this.transform.parent);
+        stone.transform.localPosition = new Vector3(0, -size.y / 4, -1);
+
+        stone = Instantiate(stonePrefab, new Vector3(size.x / 2, size.y / 2, -1), Quaternion.identity);
+        stone.transform.SetParent(this.transform.parent);
+        stone.transform.localPosition = new Vector3(0, 0, -1);
+
+        stone = Instantiate(stonePrefab, new Vector3(size.x / 2, (3 * size.y) / 4, -1), Quaternion.identity);
+        stone.transform.SetParent(this.transform.parent);
+        stone.transform.localPosition = new Vector3(0, size.y / 4, -1);
+
         createEnemy();
-        Instantiate(stonePrefab, new Vector3(150, 400, 0), Quaternion.identity);
-        Instantiate(stonePrefab, new Vector3(150, 260, 0), Quaternion.identity);
-        Instantiate(stonePrefab, new Vector3(150, 120, 0), Quaternion.identity);
     }
 
     private void createEnemy()
     {
         if (enemy != null) return;
-        var x = Random.Range(30, 250);
-        var y = Random.Range(30, 450);
-        enemy = (Instantiate(enemyPrefub, new Vector3(x, y, 0), Quaternion.identity) as GameObject).GetComponent<EnemyController>();
+        Debug.Log(size);
+        var x = Random.Range((-size.x / 2) + 30, (size.x / 2) - 30);
+        var y = Random.Range((-size.y / 2) + 30, (size.y / 2) - 30);
+
+        var enemyObject = Instantiate(enemyPrefub, new Vector3(0, 0, 0), Quaternion.identity);
+        enemyObject.transform.SetParent(this.transform.parent);
+        enemyObject.transform.localPosition = new Vector3(x, y, -1);
+
+        enemy = enemyObject.GetComponent<EnemyController>();
         enemy.setModel(gameObject);
         Debug.Log(x + " " + y);
         enemyLeft--;
