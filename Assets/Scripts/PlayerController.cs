@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -10,6 +9,24 @@ public class PlayerController : MonoBehaviour
     public GameObject bomb;
 
     private bool[] durations = new bool[4] { false, false, false, false };
+    private int _life = 3;
+    private int life
+        {
+        get => _life;
+        set
+        {
+            _life = value;
+            model.refreshLife(gameObject, value);
+            if (_life <= 0)
+            {
+                die();
+            }
+            else
+            {
+                getIndestructible();
+            }
+        }
+        }
     private enum durationNumber
     {
         UP = 0,
@@ -19,19 +36,21 @@ public class PlayerController : MonoBehaviour
     }
 
     private float speed = 1;
+    private bool isIndestructible = false;
     private Animator animator;
 
-    // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
+        model.refreshLife(gameObject, life);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //checkPlauerPosition();
-
+        if (!model.isPlayerAlive)
+        {
+            return;
+        }
         bool isRunning = false;
 
         for (int i = 0; i < 4; i++)
@@ -43,16 +62,16 @@ public class PlayerController : MonoBehaviour
                 switch (name)
                 {
                     case "UP":
-                        transform.position = new Vector2(transform.position.x, transform.position.y + speed);
+                        transform.position = new Vector3(transform.position.x, transform.position.y + speed, -1);
                         break;
                     case "LEFT":
-                        transform.position = new Vector2(transform.position.x - speed, transform.position.y);
+                        transform.position = new Vector3(transform.position.x - speed, transform.position.y, -1);
                         break;
                     case "DOWN":
-                        transform.position = new Vector2(transform.position.x, transform.position.y - speed);
+                        transform.position = new Vector3(transform.position.x, transform.position.y - speed, -1);
                         break;
                     case "RIGHT":
-                        transform.position = new Vector2(transform.position.x + speed, transform.position.y);
+                        transform.position = new Vector3(transform.position.x + speed, transform.position.y, -1);
                         break;
                 }
             }
@@ -66,6 +85,66 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("isRunning", false);
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!model.isPlayerAlive)
+        {
+            return;
+        }
+        Debug.Log(collision.gameObject.name);
+        switch (collision.gameObject.name)
+        {
+            case "LeftWall":
+                transform.position = new Vector3(transform.position.x + 10, transform.position.y, -1);
+                durations[(int)Enum.Parse(typeof(durationNumber), "LEFT")] = false;
+                break;
+            case "RightWall":
+                transform.position = new Vector3(transform.position.x - 10, transform.position.y, -1);
+                durations[(int)Enum.Parse(typeof(durationNumber), "RIGHT")] = false;
+                break;
+            case "UpWall":
+                transform.position = new Vector3(transform.position.x, transform.position.y - 10, -1);
+                durations[(int)Enum.Parse(typeof(durationNumber), "UP")] = false;
+                break;
+            case "DownWall":
+                transform.position = new Vector3(transform.position.x, transform.position.y + 10, -1);
+                durations[(int)Enum.Parse(typeof(durationNumber), "DOWN")] = false;
+                break;
+            case "Explosion(Clone)":
+                if (!isIndestructible)
+                {
+                    life--;
+                    getIndestructible();
+                }
+                break;
+            case "Enemy":
+                if (!isIndestructible)
+                {
+                    life--;
+                    getIndestructible();
+                }
+                break;
+        }
+    }
+
+    private void die()
+    {
+        model.playerDied(gameObject);
+    }
+    private void getIndestructible()
+    {
+        StartCoroutine(corutine());
+    }
+
+    private IEnumerator corutine()
+    {
+        animator.SetBool("isHit", true);
+        isIndestructible = true;
+        yield return new WaitForSeconds(2f);
+        isIndestructible = false;
+        animator.SetBool("isHit", false);
     }
 
     private void startMoving(string duration)
@@ -107,30 +186,10 @@ public class PlayerController : MonoBehaviour
 
     private void dropTheBomb()
     {
-        Instantiate(bomb, transform.position, Quaternion.identity);
+        if (!model.isPlayerAlive)
+        {
+            return;
+        }
+        Instantiate(bomb, new Vector3(transform.position.x, transform.position.y, transform.position.z - 10), Quaternion.identity);
     }
-
-    private void checkPlauerPosition()
-    {
-        var pos = Camera.main.WorldToScreenPoint(transform.position);
-
-        if (transform.transform.position.x > 100)
-        {
-            transform.transform.position = new Vector2(100, transform.transform.position.y);
-            Debug.Log(transform.position + " " + transform.transform.position + " " + pos);
-        }
-        if (transform.transform.position.x < -100)
-        {
-            transform.transform.position = new Vector2(-100, transform.transform.position.y);
-        }
-        if (transform.transform.position.y > 213)
-        {
-            transform.transform.position = new Vector2(transform.transform.position.x, 213);
-        }
-        if (transform.transform.position.y < -213)
-        {
-            transform.transform.position = new Vector2(transform.transform.position.x, -213);
-        }
-    }
-
 }
