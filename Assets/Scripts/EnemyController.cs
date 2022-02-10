@@ -8,15 +8,22 @@ public class EnemyController : MonoBehaviour
     private Vector3 vectorSpeed;
     private const int updateTime = 10;
     private int updateTimer;
+    private Animator animator;
 
+    public Game_Model model;
     private void Start()
     {
         vectorSpeed = new Vector3(0, -0.1f, 0);
         updateTimer = updateTime;
+        animator = GetComponent<Animator>();
     }
 
     void Update()
     {
+        if (!model.isPlayerAlive)
+        {
+            return;
+        }
         if(updateTimer == updateTime)
         {
             updateTimer = 0;
@@ -34,6 +41,10 @@ public class EnemyController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (!model.isPlayerAlive)
+        {
+            return;
+        }
         Debug.Log(collision.gameObject.name);
 
         switch (collision.gameObject.name)
@@ -54,7 +65,16 @@ public class EnemyController : MonoBehaviour
                 transform.position = new Vector3(transform.position.x, transform.position.y + 1, -1);
                 vectorSpeed.y *= -1;
                 break;
+            case "Explosion(Clone)":
+                animator.SetBool("isAlive", false);
+                die();
+                break;
         }
     }
 
+    private void die()
+    {
+        model.playerDied(gameObject);
+        Destroy(gameObject, 0.5f);
+    }
 }
