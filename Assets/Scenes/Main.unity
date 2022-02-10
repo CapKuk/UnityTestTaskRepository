@@ -177,7 +177,6 @@ MonoBehaviour:
   rightButton: {fileID: 989389230}
   lifeText: {fileID: 1716481890}
   canvas: {fileID: 1970163527}
-  stonePrefab: {fileID: 6152605276033067390, guid: 1293b0bae29a9f64fbca1c17b654ab82, type: 3}
   player: {fileID: 384330295}
   restartButton: {fileID: 492603067}
 --- !u!4 &31742846
@@ -406,7 +405,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 384330295}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -311, y: 122, z: -2.222}
+  m_LocalPosition: {x: -369, y: -94, z: -2.222}
   m_LocalScale: {x: 928.853, y: 928.853, z: 3.715412}
   m_Children: []
   m_Father: {fileID: 1970163531}
@@ -1888,7 +1887,7 @@ Transform:
   m_GameObject: {fileID: 1591562508}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1.494}
-  m_LocalScale: {x: 250, y: 250, z: 0}
+  m_LocalScale: {x: 302.53244, y: 302.53244, z: 0}
   m_Children: []
   m_Father: {fileID: 1970163531}
   m_RootOrder: 0
@@ -2145,8 +2144,8 @@ Canvas:
   m_GameObject: {fileID: 1970163527}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 519420031}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1

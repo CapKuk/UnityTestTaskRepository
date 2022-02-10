@@ -44,6 +44,11 @@ public class Game_Model : MonoBehaviour
         }
     }
 
+    internal float getPlayerSpeed()
+    {
+        return size.x / 1080;
+    }
+
     private Vector2 size = new Vector2();
     private void setSize()
     {

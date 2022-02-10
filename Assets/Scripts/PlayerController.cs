@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         model.refreshLife(gameObject, life);
+        speed = model.getPlayerSpeed();
     }
 
     void Update()
