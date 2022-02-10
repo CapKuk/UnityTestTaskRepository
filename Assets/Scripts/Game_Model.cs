@@ -6,6 +6,7 @@ public class Game_Model : MonoBehaviour
     public Text lifeCounterTextField;
     public GameObject enemyPrefub;
     public GameObject restartButton;
+    public GameObject stonePrefab;
 
     private int enemyLeft = 10;
     private EnemyController enemy = null;
@@ -45,6 +46,9 @@ public class Game_Model : MonoBehaviour
     private void Start()
     {
         createEnemy();
+        Instantiate(stonePrefab, new Vector3(150, 400, 0), Quaternion.identity);
+        Instantiate(stonePrefab, new Vector3(150, 260, 0), Quaternion.identity);
+        Instantiate(stonePrefab, new Vector3(150, 120, 0), Quaternion.identity);
     }
 
     private void createEnemy()

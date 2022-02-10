@@ -112,6 +112,34 @@ public class PlayerController : MonoBehaviour
                 transform.position = new Vector3(transform.position.x, transform.position.y + 10, -1);
                 durations[(int)Enum.Parse(typeof(durationNumber), "DOWN")] = false;
                 break;
+            case "stone(Clone)":
+                Debug.Log("touch stone");
+                for(int i = 0; i < 4; i++)
+                {
+                    if (durations[i])
+                    {
+                        if (durations[i])
+                        {
+                            string name = Enum.GetName(typeof(durationNumber), i);
+                            switch (name)
+                            {
+                                case "UP":
+                                    transform.position = new Vector3(transform.position.x, collision.gameObject.transform.position.y - 80, -1);
+                                    break;
+                                case "LEFT":
+                                    transform.position = new Vector3(collision.gameObject.transform.position.x + 80, transform.position.y, -1);
+                                    break;
+                                case "DOWN":
+                                    transform.position = new Vector3(transform.position.x, collision.gameObject.transform.position.y + 80, -1);
+                                    break;
+                                case "RIGHT":
+                                    transform.position = new Vector3(collision.gameObject.transform.position.x - 80, transform.position.y, -1);
+                                    break;
+                            }
+                        }
+                    }
+                }
+                break;
             case "Explosion(Clone)":
                 if (!isIndestructible)
                 {

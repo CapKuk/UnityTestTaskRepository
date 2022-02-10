@@ -4,6 +4,6 @@ public class ExplosionController : MonoBehaviour
 {
     void Start()
     {
-        Destroy(gameObject, 1f);
+        Destroy(gameObject, 0.42f);
     }
 }
