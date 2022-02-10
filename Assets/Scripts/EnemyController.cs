@@ -9,18 +9,35 @@ public class EnemyController : MonoBehaviour
     private const int updateTime = 10;
     private int updateTimer;
     private Animator animator;
+    private bool _isStartYet = true;
+    public bool isStartYet
+    {
+        get => _isStartYet;
+        private set
+        {
+            _isStartYet = value;
+        }
+    } 
+        
 
-    public Game_Model model;
+    private Game_Model model;
     private void Start()
     {
         vectorSpeed = new Vector3(0, -0.1f, 0);
         updateTimer = updateTime;
         animator = GetComponent<Animator>();
+        StartCoroutine(corutine());
+    }
+
+    private IEnumerator corutine()
+    {
+        yield return new WaitForSeconds(0.2f);
+        isStartYet = false;
     }
 
     void Update()
     {
-        if (!model.isPlayerAlive)
+        if (!model.isPlayerAlive || model.isGameFinished)
         {
             return;
         }
@@ -66,15 +83,32 @@ public class EnemyController : MonoBehaviour
                 vectorSpeed.y *= -1;
                 break;
             case "Explosion(Clone)":
+                if (isStartYet) break;
                 animator.SetBool("isAlive", false);
                 die();
                 break;
         }
     }
 
+    public void setModel(GameObject sender)
+    {
+        if(sender.name == "GameModel")
+        {
+            model = sender.GetComponent<Game_Model>();
+        }
+    }
+
     private void die()
     {
-        model.playerDied(gameObject);
+        model.enemyDied(gameObject);
         Destroy(gameObject, 0.5f);
+    }
+
+    public void destroy(GameObject sender)
+    {
+        if(sender.name == "GameModel")
+        {
+            Destroy(gameObject);
+        }
     }
 }

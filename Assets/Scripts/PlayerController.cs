@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (!model.isPlayerAlive)
+        if (!model.isPlayerAlive || model.isGameFinished)
         {
             return;
         }
@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!model.isPlayerAlive)
+        if (!model.isPlayerAlive || model.isGameFinished)
         {
             return;
         }
@@ -119,7 +119,7 @@ public class PlayerController : MonoBehaviour
                     getIndestructible();
                 }
                 break;
-            case "Enemy":
+            case "Enemy(Clone)":
                 if (!isIndestructible)
                 {
                     life--;
@@ -131,6 +131,10 @@ public class PlayerController : MonoBehaviour
 
     private void die()
     {
+        for(int i = 0; i < 4; i++)
+        {
+            durations[i] = false;
+        }
         model.playerDied(gameObject);
     }
     private void getIndestructible()
@@ -191,5 +195,11 @@ public class PlayerController : MonoBehaviour
             return;
         }
         Instantiate(bomb, new Vector3(transform.position.x, transform.position.y, transform.position.z - 10), Quaternion.identity);
+    }
+
+    private void resetGame()
+    {
+        life = 3;
+        transform.position = new Vector3(140, 258, -1);
     }
 }
